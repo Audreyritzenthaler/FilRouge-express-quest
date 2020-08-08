@@ -49,6 +49,49 @@ router.get('/filterdate', (req, res) => {
     })
 })
 
+// 
+
+router.get('/filterdate', (req, res) => {
+    let sqlQuery = `SELECT * FROM family`
+    const sqlValues = []
+
+    if (req.query.birthDate) {
+        sqlQuery += ' WHERE birthDate > ?'
+        sqlValues.push(req.query.birthDate)
+    }
+
+    connection.query(sqlQuery, sqlValues, (error, results) => {
+        if (error) {
+            console.log(error)
+            return res.status(500).json({ error: 'Failed to retrieve data !' })
+        } else {
+            return res.status(200).json(results)
+        }
+    })
+})
+
+//
+
+router.get('/filterdate', (req, res) => {
+    let sqlQuery = `SELECT * FROM family`
+    const sqlValues = []
+
+    if (req.query.birthDate) {
+        sqlQuery += ' WHERE birthDate > ?'
+        sqlValues.push(req.query.birthDate)
+    }
+
+    connection.query(sqlQuery, sqlValues, (error, results) => {
+        if (error) {
+            console.log(error)
+            return res.status(500).json({ error: 'Failed to retrieve data !' })
+        } else {
+            return res.status(200).json(results)
+        }
+    })
+})
+//
+
 router.get('/:sort', (req, res) => {
     const order = req.params.sort
     let sqlQuery = `SELECT * FROM family ORDER BY name ${order}`
