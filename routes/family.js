@@ -49,18 +49,20 @@ router.get('/filterdate', (req, res) => {
     })
 })
 
-// 
+// Filter by name 'begin by ...'
+// if the request doesn't work you can try another solution on ;
+// https://stackoverflow.com/questions/17922587/node-mysql-escape-like-statement
 
-router.get('/filterdate', (req, res) => {
+router.get('/', (req, res) => {
     let sqlQuery = `SELECT * FROM family`
     const sqlValues = []
 
-    if (req.query.birthDate) {
-        sqlQuery += ' WHERE birthDate > ?'
-        sqlValues.push(req.query.birthDate)
+    if (req.query.name) {
+        sqlQuery += ' WHERE name LIKE ?'
+        sqlValues.push(req.query.name)
     }
 
-    connection.query(sqlQuery, sqlValues, (error, results) => {
+    connection.query(sqlQuery, '%' + sqlValues, (error, results) => {
         if (error) {
             console.log(error)
             return res.status(500).json({ error: 'Failed to retrieve data !' })
@@ -70,18 +72,18 @@ router.get('/filterdate', (req, res) => {
     })
 })
 
-//
+// Filter by name 'contains ...'
 
-router.get('/filterdate', (req, res) => {
+router.get('/', (req, res) => {
     let sqlQuery = `SELECT * FROM family`
     const sqlValues = []
 
-    if (req.query.birthDate) {
-        sqlQuery += ' WHERE birthDate > ?'
-        sqlValues.push(req.query.birthDate)
+    if (req.query.name) {
+        sqlQuery += ' WHERE name LIKE ?'
+        sqlValues.push(req.query.name)
     }
 
-    connection.query(sqlQuery, sqlValues, (error, results) => {
+    connection.query(sqlQuery, '%' + sqlValues + '%', (error, results) => {
         if (error) {
             console.log(error)
             return res.status(500).json({ error: 'Failed to retrieve data !' })
@@ -90,7 +92,6 @@ router.get('/filterdate', (req, res) => {
         }
     })
 })
-//
 
 router.get('/:sort', (req, res) => {
     const order = req.params.sort
