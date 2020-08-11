@@ -50,19 +50,15 @@ router.get('/filterdate', (req, res) => {
 })
 
 // Filter by name 'begin by ...'
-// if the request doesn't work you can try another solution on ;
-// https://stackoverflow.com/questions/17922587/node-mysql-escape-like-statement
 
-router.get('/', (req, res) => {
+router.get('/begin', (req, res) => {
     let sqlQuery = `SELECT * FROM family`
-    const sqlValues = []
 
     if (req.query.name) {
-        sqlQuery += ' WHERE name LIKE ?'
-        sqlValues.push(req.query.name)
+        sqlQuery += " WHERE name LIKE CONCAT(?, '%')"
     }
 
-    connection.query(sqlQuery, '%' + sqlValues, (error, results) => {
+    connection.query(sqlQuery, req.query.name, (error, results) => {
         if (error) {
             console.log(error)
             return res.status(500).json({ error: 'Failed to retrieve data !' })
@@ -74,18 +70,15 @@ router.get('/', (req, res) => {
 
 // Filter by name 'contains ...'
 
-router.get('/', (req, res) => {
+router.get('/contains', (req, res) => {
     let sqlQuery = `SELECT * FROM family`
-    const sqlValues = []
 
     if (req.query.name) {
-        sqlQuery += ' WHERE name LIKE ?'
-        sqlValues.push(req.query.name)
+        sqlQuery += ' WHERE name LIKE ' + connection.escape('%' + req.query.name + '%')
     }
 
-    connection.query(sqlQuery, '%' + sqlValues + '%', (error, results) => {
+    connection.query(sqlQuery, (error, results) => {
         if (error) {
-            console.log(error)
             return res.status(500).json({ error: 'Failed to retrieve data !' })
         } else {
             return res.status(200).json(results)
